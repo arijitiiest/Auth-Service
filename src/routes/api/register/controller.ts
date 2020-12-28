@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 import { User, IUser } from "../../../models/user";
 
@@ -33,20 +34,22 @@ export const postRegister = async (req: Request, res: Response) => {
       html: `<h3>OTP for your login is </h3> <h1 style='font-weight:bold;'>${otp}</h1>`,
     };
 
-    transporter.sendMail(mailOptions, (err, info) => {
+    transporter.sendMail(mailOptions, async (err, _info) => {
       if (err) {
         console.log(err);
         res.status(400).json({ error: err });
       } else {
-        console.log("Message sent: %s", info.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Message sent: %s", _info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(_info));
+
+        const hash = await bcrypt.hash(otp.toString(), 10);
 
         const user: IUser = new User({
           email,
           firstname,
           lastname,
           phoneno,
-          otp,
+          otp: hash,
         });
 
         user.save();
@@ -56,6 +59,6 @@ export const postRegister = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
-    res.json(400).json({ message: "Something went wrong" });
+    res.status(400).json({ message: "Something went wrong" });
   }
 };

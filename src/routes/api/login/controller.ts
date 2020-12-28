@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import { User } from "../../../models/user";
 
@@ -19,14 +21,19 @@ export const postLogin = async (req: Request, res: Response) => {
     if (user === null) {
       res.status(400).json({ message: "No User Found" });
     } else {
-      if (user?.otp === otp) {
-        res.status(200).json({ message: "Login Success" });
+      if (bcrypt.compareSync(otp, user.otp)) {
+        const token = jwt.sign(
+          { _id: user._id.toString() },
+          process.env.SECRET_KEY || "",
+          { expiresIn: "24h" }
+        );
+        res.status(200).json({ message: "Login Success", token });
       } else {
         res.status(400).json({ message: "OTP Incorrect" });
       }
     }
   } catch (err) {
     console.log(err);
-    res.json(400).json({ message: "Something went wrong", err: err });
+    res.status(400).json({ message: "Something went wrong", err: err });
   }
 };

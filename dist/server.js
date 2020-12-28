@@ -24,9 +24,9 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const path_1 = __importDefault(require("path"));
+dotenv.config({ path: path_1.default.join(__dirname, "..", ".env") });
 const api_1 = __importDefault(require("./routes/api"));
 const db_1 = require("./utils/db");
-dotenv.config({ path: path_1.default.join(__dirname, "..", ".env") });
 const PORT = process.env.PORT || 5000;
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
