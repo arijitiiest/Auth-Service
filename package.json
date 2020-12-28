@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "ts-node src/server.ts",
     "dev": "ts-node-dev --respawn src/server.ts",
-    "build": "tsc && cd client && npm run build",
+    "build": "tsc",
     "start": "node dist/server.js"
   },
   "author": "Arijit",
