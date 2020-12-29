@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.disconnect = exports.connect = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 let db;
-exports.connect = () => __awaiter(void 0, void 0, void 0, function* () {
+const connect = () => __awaiter(void 0, void 0, void 0, function* () {
     let db;
     yield mongoose_1.default.connect(process.env.DB_URI || "", {
         useNewUrlParser: true,
@@ -30,10 +31,12 @@ exports.connect = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Error connecting to database");
     });
 });
-exports.disconnect = () => {
+exports.connect = connect;
+const disconnect = () => {
     if (!db) {
         return;
     }
     mongoose_1.default.disconnect();
 };
+exports.disconnect = disconnect;
 //# sourceMappingURL=db.js.map

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.postRegister = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = require("../../../models/user");
@@ -26,12 +27,22 @@ const transporter = nodemailer_1.default.createTransport({
         pass: process.env.MAIL_PASS,
     },
 });
-exports.postRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const postRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
         const firstname = req.body.first_name;
         const lastname = req.body.last_name;
         const phoneno = req.body.phone_no;
+        let user = yield user_1.User.findOne({ email });
+        if (user !== null) {
+            res.status(400).json({ message: "Email already exist" });
+            return;
+        }
+        user = yield user_1.User.findOne({ phoneno });
+        if (user !== null) {
+            res.status(400).json({ message: "Phone no already exist" });
+            return;
+        }
         let otp = Math.random();
         otp = otp * 1000000;
         otp = parseInt(otp.toFixed(0));
@@ -67,4 +78,5 @@ exports.postRegister = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(400).json({ message: "Something went wrong" });
     }
 });
+exports.postRegister = postRegister;
 //# sourceMappingURL=controller.js.map

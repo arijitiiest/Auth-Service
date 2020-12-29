@@ -23,9 +23,8 @@ export const postLogin = async (req: Request, res: Response) => {
     } else {
       if (bcrypt.compareSync(otp, user.otp)) {
         const token = jwt.sign(
-          { _id: user._id.toString() },
-          process.env.SECRET_KEY || "",
-          { expiresIn: "24h" }
+          user._id.toString(),
+          process.env.SECRET_KEY || ""
         );
         res.status(200).json({ message: "Login Success", token });
       } else {

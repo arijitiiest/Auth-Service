@@ -23,6 +23,18 @@ export const postRegister = async (req: Request, res: Response) => {
     const lastname = req.body.last_name;
     const phoneno = req.body.phone_no;
 
+    let user = await User.findOne({email});
+    if(user !== null) {
+      res.status(400).json({message: "Email already exist"});
+      return;
+    }
+
+    user = await User.findOne({phoneno});
+    if(user !== null) {
+      res.status(400).json({message: "Phone no already exist"});
+      return;
+    }
+
     let otp = Math.random();
     otp = otp * 1000000;
     otp = parseInt(otp.toFixed(0));

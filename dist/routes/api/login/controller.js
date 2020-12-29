@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.postLogin = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("../../../models/user");
-exports.postLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const postLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const username = req.body.email_phone;
         const otp = req.body.otp;
@@ -29,7 +30,7 @@ exports.postLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         else {
             if (bcrypt_1.default.compareSync(otp, user.otp)) {
-                const token = jsonwebtoken_1.default.sign({ _id: user._id.toString() }, process.env.SECRET_KEY || "", { expiresIn: "24h" });
+                const token = jsonwebtoken_1.default.sign(user._id.toString(), process.env.SECRET_KEY || "");
                 res.status(200).json({ message: "Login Success", token });
             }
             else {
@@ -42,4 +43,5 @@ exports.postLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(400).json({ message: "Something went wrong", err: err });
     }
 });
+exports.postLogin = postLogin;
 //# sourceMappingURL=controller.js.map
