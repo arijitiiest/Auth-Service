@@ -16,6 +16,7 @@ const Home = ({ history }) => {
       } catch (err) {
         setError(err);
         setIsLoading(false);
+        history.push("/login")
       }
     };
     fetch();
